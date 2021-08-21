@@ -4,9 +4,10 @@
 
 class Rule ():
 
+    __isEnabled = True
     __isFixable = False
     __properties = None
-
+    
     # Class constructor
     def __init__ (self):
         self.__properties = {
@@ -36,6 +37,14 @@ class Rule ():
     # Sets the Rule Object to be fixable if desired, providing it has some Fix Code on its properties
     def setFixable (self, fixable):
         self.__isFixable = fixable and self.__properties["FixCode"] != "" and self.__properties["FixCode"] != None
+
+    # Returns whether the Rule Object is enabled
+    def isEnabled (self):
+        return self.__isEnabled
+
+    # Sets the Rule Object to be enabled or disabled
+    def setEnabled (self, enabled):
+        self.__isEnabled = enabled
 
     # Debug function: returns a formatted string with all the Rule Object property data
     def debug_printRule (self):

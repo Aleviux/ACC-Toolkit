@@ -1,4 +1,4 @@
-from APICommunicator_Class import APICommunicator
+from classes.APICommunicator_Class import APICommunicator
 
 ########################################
 # API COMMUNICATOR MAYA IMPLEMENTATION

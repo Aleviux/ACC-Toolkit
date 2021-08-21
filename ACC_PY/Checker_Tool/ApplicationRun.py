@@ -10,10 +10,10 @@ PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(PACKAGE_DIR)
 
 # Reload custom modules (Debug)
-#from ReloadModules import *
-#resetSessionForScript()
+#from debug.ReloadCustomModules_Debug import *
+#reloadCustomModules()
 
-from classes.MainWindowManager_Class import *
+from classes.MainWindowManager_Class import MainWindowManager
 
 #######################################
 # RUN FUNCTION

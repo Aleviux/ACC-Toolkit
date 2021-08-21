@@ -5,10 +5,10 @@ from PySide2 import QtWidgets as QWidget
 from PySide2 import QtGui as QGui
 from PySide2 import QtCore as QCore
 
-from MainWindowUI_QtClass import Ui_MainWindow as MainWindowUI
-from RuleUI_QtClass import Ui_MainWindow as RuleUI
+from classes.MainWindowUI_QtClass import Ui_MainWindow as MainWindowUI
+from classes.RuleUI_QtClass import Ui_MainWindow as RuleUI
 
-import MainWindowManager_Class
+import classes.MainWindowManager_Class
 
 ########################################
 # MAIN WINDOW VIEW
@@ -23,8 +23,13 @@ class ScriptRow (QWidget.QWidget): # QWidget for each Script Row in the Main Win
 	def __init__ (self, sName):
 		super(ScriptRow, self).__init__()
 
-		self.__Manager = MainWindowManager_Class.MainWindowManager.__metaclass__\
-		.getInstance(MainWindowManager_Class.MainWindowManager)
+		# Python 2 metaclasses
+		# self.__Manager = classes.MainWindowManager_Class.MainWindowManager.__metaclass__\
+		# .getInstance(classes.MainWindowManager_Class.MainWindowManager)
+
+		# Python 3 metaclasses
+		self.__Manager = classes.MainWindowManager_Class.MainWindowManager\
+		.getInstance(classes.MainWindowManager_Class.MainWindowManager)
 
 		self.__scriptName = sName
 
@@ -50,12 +55,17 @@ class ScriptRow (QWidget.QWidget): # QWidget for each Script Row in the Main Win
 
 	# Qt Signals Conections
 	def setupSignals (self):
+		self.chk_enabled.clicked.connect(lambda : self.__Manager.toggleScript(self.__scriptName))
 		self.btn_up.clicked.connect(lambda : self.__Manager.raiseScript(self.__scriptName))
 		self.btn_down.clicked.connect(lambda : self.__Manager.lowerScript(self.__scriptName))
 
 	# Returns whether the Script Row is checked
 	def isChecked (self):
-		return self.chk_enabled.checkState()
+		return bool(self.chk_enabled.isChecked())
+
+	# Checks or unchecks the Script Row
+	def setChecked (self, checked):
+		self.chk_enabled.setChecked(checked)
 
 	# Disables the up and down arrows for the Script Row
 	def disableArrows (self, isTop, isBottom):
@@ -71,8 +81,13 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 	def __init__ (self, rName):
 		super(RuleRow, self).__init__()
 
-		self.__Manager = MainWindowManager_Class.MainWindowManager.__metaclass__\
-		.getInstance(MainWindowManager_Class.MainWindowManager)
+		# Python 2 metaclasses
+		# self.__Manager = classes.MainWindowManager_Class.MainWindowManager.__metaclass__\
+		# .getInstance(classes.MainWindowManager_Class.MainWindowManager)
+
+		# Python 3 metaclasses
+		self.__Manager = classes.MainWindowManager_Class.MainWindowManager\
+		.getInstance(classes.MainWindowManager_Class.MainWindowManager)
 
 		self.__ruleName = rName
 
@@ -81,8 +96,19 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 
 	# Qt UI Creation
 	def createUI (self):
-		lyt = QWidget.QHBoxLayout()
-		
+		lytV = QWidget.QHBoxLayout()
+
+		wdgH1 = QWidget.QWidget()
+		wdgH1.setMaximumWidth(20)
+		lytH1 = QWidget.QHBoxLayout()
+
+		wdgH2 = QWidget.QWidget()
+		lytH2 = QWidget.QHBoxLayout()
+
+		self.chk_enabled = QWidget.QCheckBox("", self)
+		self.chk_enabled.setMaximumWidth(20)
+		self.setChecked(True)
+
 		self.lab_ruleName = QWidget.QLabel(self.__ruleName)
 		self.lab_ruleName.setAlignment(QCore.Qt.AlignCenter)
 
@@ -101,23 +127,46 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 		self.btn_ruleDelete.setMaximumWidth(40)
 		self.btn_ruleInfo = QWidget.QPushButton("Info")
 		self.btn_ruleInfo.setMaximumWidth(40)
+		self.btn_up = QWidget.QPushButton("▲")
+		self.btn_up.setMaximumWidth(20)
+		self.btn_down = QWidget.QPushButton("▼")
+		self.btn_down.setMaximumWidth(20)
 
-		lyt.addWidget(self.btn_ruleCheck)
-		lyt.addWidget(self.btn_ruleFix)
-		lyt.addWidget(self.btn_ruleEdit)
-		lyt.addWidget(self.btn_ruleDelete)
-		lyt.addWidget(self.btn_ruleInfo)
-		lyt.addWidget(self.lab_ruleName)
-		lyt.addWidget(self.lab_ruleStatus)
+		lytH1.addWidget(self.chk_enabled)
+		lytH2.addWidget(self.btn_ruleCheck)
+		lytH2.addWidget(self.btn_ruleFix)
+		lytH2.addWidget(self.btn_ruleEdit)
+		lytH2.addWidget(self.btn_ruleDelete)
+		lytH2.addWidget(self.btn_ruleInfo)
+		lytH2.addWidget(self.lab_ruleName)
+		lytH2.addWidget(self.lab_ruleStatus)
+		lytH2.addWidget(self.btn_up)
+		lytH2.addWidget(self.btn_down)
 
-		self.setLayout(lyt)
+		lytV.addWidget(wdgH1)
+		lytV.addWidget(wdgH2)
+
+		wdgH1.setLayout(lytH1)
+		wdgH2.setLayout(lytH2)
+		self.setLayout(lytV)
 
 	# Qt Signals Conections
 	def setupSignals (self):
+		self.chk_enabled.clicked.connect(lambda : self.__Manager.toggleRule(self.__ruleName))
 		self.btn_ruleCheck.clicked.connect(lambda : self.__Manager.checkRule(self.__ruleName))
 		self.btn_ruleFix.clicked.connect(lambda : self.__Manager.fixRule(self.__ruleName))
 		self.btn_ruleDelete.clicked.connect(self.confirmRuleDeleteDialog)
 		self.btn_ruleInfo.clicked.connect(lambda : self.__Manager.showRuleInfo(self.__ruleName))
+		self.btn_up.clicked.connect(lambda : self.__Manager.raiseRule(self.__ruleName))
+		self.btn_down.clicked.connect(lambda : self.__Manager.lowerRule(self.__ruleName))
+
+	# Returns whether the Rule Row is checked
+	def isChecked (self):
+		return self.chk_enabled.isChecked()
+
+	# Checks or unchecks the Rule Row
+	def setChecked (self, checked):
+		self.chk_enabled.setChecked(checked)
 
 	# Creates a dialog to confirm the Rule Row deletion
 	def confirmRuleDeleteDialog (self):
@@ -155,6 +204,16 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 	def setFixable (self, isFixable):
 		self.btn_ruleFix.setEnabled(isFixable)
 
+	# Enables/Disables the Rule Row
+	def toggle (self, toggle):
+		row = self.lab_ruleName.parentWidget()
+		row.setEnabled(toggle)
+
+	# Disables the up and down arrows for the Rule Row
+	def disableArrows (self, isTop, isBottom):
+		self.btn_up.setEnabled(not isTop)
+		self.btn_down.setEnabled(not isBottom)
+
 class RuleWindow (QWidget.QMainWindow, RuleUI): # QWidget for the Rule Window data input
 
 	__Manager = None
@@ -164,8 +223,13 @@ class RuleWindow (QWidget.QMainWindow, RuleUI): # QWidget for the Rule Window da
 	def __init__ (self):
 		super(RuleWindow, self).__init__()
 
-		self.__Manager = MainWindowManager_Class.MainWindowManager.__metaclass__\
-		.getInstance(MainWindowManager_Class.MainWindowManager)
+		# Python 2 metaclasses
+		# self.__Manager = classes.MainWindowManager_Class.MainWindowManager.__metaclass__\
+		# .getInstance(classes.MainWindowManager_Class.MainWindowManager)
+
+		# Python 3 metaclasses
+		self.__Manager = classes.MainWindowManager_Class.MainWindowManager\
+		.getInstance(classes.MainWindowManager_Class.MainWindowManager)
 		
 		self.setupUi(self)
 		self.txt_checkCode.setTabStopWidth(self.txt_checkCode.fontMetrics().width(' ') * 8)
@@ -182,6 +246,7 @@ class RuleWindow (QWidget.QMainWindow, RuleUI): # QWidget for the Rule Window da
 		}
 
 		self.setWindowTitle("Rule Data")
+		self.setWindowFlags(QCore.Qt.WindowStaysOnTopHint)
 
 	# Qt Signals Conections
 	def setupSignals (self):
@@ -245,12 +310,21 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 	__ruleRows = None
 	__scriptRows = None
 
+	############################
+	##### Window Functions #####
+	############################
+	
 	# Class constructor
 	def __init__ (self):
 		super(MainWindow, self).__init__()
 
-		self.__Manager = MainWindowManager_Class.MainWindowManager.__metaclass__\
-		.getInstance(MainWindowManager_Class.MainWindowManager)
+		# Python 2 metaclasses
+		# self.__Manager = classes.MainWindowManager_Class.MainWindowManager.__metaclass__\
+		# .getInstance(classes.MainWindowManager_Class.MainWindowManager)
+
+		# Python 3 metaclasses
+		self.__Manager = classes.MainWindowManager_Class.MainWindowManager\
+		.getInstance(classes.MainWindowManager_Class.MainWindowManager)
 
 		self.setupUi(self)
 		self.setupSignals()
@@ -262,10 +336,19 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 		self.clearScriptRows("pre")
 		self.clearScriptRows("post")
 
+		self.setCurrentProfileText()
+
+		self.resetProgressBar()
+
 		self.setWindowTitle("Checker Tool")
+		self.setWindowFlags(QCore.Qt.WindowStaysOnTopHint)
 
 	# Qt Signals Conections
 	def setupSignals (self):
+		self.menuProfileSave.triggered.connect(self.__Manager.saveProfile)
+		self.menuProfileLoad.triggered.connect(self.__Manager.changeProfilePath)
+		self.menuProfileClear.triggered.connect(self.__Manager.clearProfile)
+
 		self.btn_rulesPathBrowse.clicked.connect(self.__Manager.changeRulePath)
 
 		self.btn_addRule.clicked.connect(self.createRuleUI)
@@ -291,7 +374,17 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 	def closeEvent (self, event):
 		event.accept()
 
+	############################
+	##### Profiles MenuBar #####
+	############################
+
+	# Changes the display name for the current loaded Profile
+	def setCurrentProfileText(self, profile = None):
+		self.menuProfileCurrent.setTitle("Current Profile: " + str(profile))
+
+	############################
 	##### Rule Data Window #####
+	############################
 
 	# Opens the Rule Creation Window
 	def createRuleUI (self):
@@ -318,7 +411,9 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 			self.__ruleWindow.setRuleData(rData)
 			self.__ruleWindow.setRuleDataUI()
 
+	#####################
 	##### Rule Rows #####
+	#####################
 
 	# Updates the Rule Path text label
 	def setRulePathText (self, text):
@@ -349,7 +444,8 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 
 		lyt.addStretch()
 
-		for ruleRow in self.__ruleRows.keys():
+		rules = list(self.__ruleRows.keys())
+		for ruleRow in rules:
 			del self.__ruleRows[ruleRow]
 
 	# Deletes the Rule Row
@@ -381,7 +477,29 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 		if rName in self.__ruleRows:
 			self.__ruleRows[rName].setStatus(status, isFixable)
 
+	# Returns the checked value of the desired Rule Row
+	def isRuleChecked (self, rName):
+		if rName in self.__ruleRows:
+			return self.__ruleRows[rName].isChecked()
+
+	# Checks or unchecks the desired Rule Row
+	def setRuleChecked (self, rName, checked):
+		if rName in self.__ruleRows:
+			self.__ruleRows[rName].setChecked(checked)
+
+	# Toggles the desired rule
+	def toggleRuleRow (self, rName, toggle):
+		if rName in self.__ruleRows:
+			self.__ruleRows[rName].toggle(toggle)
+
+	# Disables the up and down  arrows for the desired Script Row
+	def disableRuleRowArrows (self, rName, isTop = False, isBottom = False):
+		if rName in self.__ruleRows.keys(): 
+			self.__ruleRows[rName].disableArrows(isTop, isBottom)
+
+	#######################
 	##### Script Rows #####
+	#######################
 
 	# Updates the Pre-Scripts Path text label
 	def setPreScriptsPathText (self, text):
@@ -418,15 +536,29 @@ class MainWindow (QWidget.QMainWindow, MainWindowUI): # QWidget for the Main Win
 
 		scroll_lyt.addStretch()
 
-		for scriptRow in self.__scriptRows.keys():
-			del self.__scriptRows[scriptRow]
-
 	# Returns the checked value of the desired Script Row
 	def isScriptChecked (self, script):
 		if script in self.__scriptRows: 
 			return self.__scriptRows[script].isChecked()
 
+	# Checks or unchecks the desired Script Row
+	def setScriptChecked (self, script, checked):
+		if script in self.__scriptRows: 
+			self.__scriptRows[script].setChecked(checked)
+
 	# Disables the up and down  arrows for the desired Script Row
 	def disableScriptArrows (self, script, isTop = False, isBottom = False):
 		if script in self.__scriptRows.keys(): 
 			self.__scriptRows[script].disableArrows(isTop, isBottom)
+
+	########################
+	##### Progress Bar #####
+	########################
+
+	# Sets the given value to the progress bar
+	def setProgressBarValue(self, value):
+		self.progressBar.setValue(value)
+
+	# Resets the progress bar back to zero
+	def resetProgressBar(self):
+		self.progressBar.reset()

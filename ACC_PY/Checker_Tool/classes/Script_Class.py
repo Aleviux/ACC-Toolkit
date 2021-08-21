@@ -4,6 +4,8 @@
 
 class Script ():
 
+    __isEnabled = True
+
     __name = ""
     __code = ""
     __syntax = "" 
@@ -25,3 +27,11 @@ class Script ():
     # Returns the Script Object Syntax
     def getSyntax (self):
         return self.__syntax
+
+    # Returns whether the Script Object is enabled
+    def isEnabled (self):
+        return self.__isEnabled
+
+    # Sets the Script Object to be enabled or disabled
+    def setEnabled (self, enabled):
+        self.__isEnabled = enabled

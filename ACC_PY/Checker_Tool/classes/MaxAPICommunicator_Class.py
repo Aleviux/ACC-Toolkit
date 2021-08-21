@@ -1,4 +1,4 @@
-from APICommunicator_Class import APICommunicator
+from classes.APICommunicator_Class import APICommunicator
 
 ########################################
 # API COMMUNICATOR MAX IMPLEMENTATION
@@ -11,6 +11,22 @@ class MaxAPICommunicator (APICommunicator):
 	def __init__ (self):
 		import pymxs # Max runtime module (MaxPlus not supported on Max 2021+)
 		self.rt = pymxs.runtime
+
+		# Initial config for FBX
+		self.rt.FBXExporterSetParam ("SmoothingGroups", True)
+		self.rt.FBXExporterSetParam ("GeomNormalPerPoly", False)
+		self.rt.FBXExporterSetParam ("TangentsandBinormals", True)
+		self.rt.FBXExporterSetParam ("SmoothMesh", False)
+		self.rt.FBXExporterSetParam ("Instances", True)
+		self.rt.FBXExporterSetParam ("SelectionSets", False)
+		self.rt.FBXExporterSetParam ("MaxBoneAsBone", True)
+		self.rt.FBXExporterSetParam ("Triangulate", False)
+		self.rt.FBXExporterSetParam ("PreserveEdgeOrientation", True)
+		self.rt.FBXExporterSetParam ("MRCustomAttributes", False)
+
+		self.rt.FBXExporterSetParam ("Animation", False)
+		self.rt.FBXExporterSetParam ("Skin", True)
+		self.rt.FBXExporterSetParam ("Shape", True)
 
 	def evaluateCode (self, syntax, code):
 		result = None
@@ -74,7 +90,7 @@ class MaxAPICommunicator (APICommunicator):
 
 	def exportSettings (self):
 		self.rt.OpenFbxSetting()
-
+		
 	def saveScene (self, path):
 		self.rt.saveMaxFile(path)
 

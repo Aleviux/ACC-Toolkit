@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>700</height>
+    <width>800</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
-    <height>700</height>
+    <width>700</width>
+    <height>800</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -102,8 +102,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>576</width>
-             <height>256</height>
+             <width>776</width>
+             <height>332</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -264,8 +264,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>274</width>
-               <height>223</height>
+               <width>374</width>
+               <height>299</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_2"/>
@@ -345,8 +345,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>274</width>
-               <height>223</height>
+               <width>374</width>
+               <height>299</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4"/>
@@ -419,9 +419,38 @@
         </item>
        </layout>
       </item>
+      <item>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuProfileCurrent">
+    <property name="title">
+     <string>Current Profile:</string>
+    </property>
+    <addaction name="menuProfileSave"/>
+    <addaction name="menuProfileLoad"/>
+    <addaction name="menuProfileClear"/>
+   </widget>
+   <addaction name="menuProfileCurrent"/>
   </widget>
   <action name="actionLoad">
    <property name="text">
@@ -431,6 +460,21 @@
   <action name="actionChange_Dir">
    <property name="text">
     <string>Change Dir</string>
+   </property>
+  </action>
+  <action name="menuProfileSave">
+   <property name="text">
+    <string>Save Profile...</string>
+   </property>
+  </action>
+  <action name="menuProfileLoad">
+   <property name="text">
+    <string>Load Profile...</string>
+   </property>
+  </action>
+  <action name="menuProfileClear">
+   <property name="text">
+    <string>Clear Profile</string>
    </property>
   </action>
  </widget>
