@@ -128,6 +128,8 @@ class MainWindowManager (metaclass = SingletonMetaclass): # Python 3 metaclasses
 			assert ("Rules" in jdata and "PreScripts" in jdata and "PostScripts" in jdata and "Profile" in jdata)
 		except AssertionError:
 			jdata = self.resetConfig()
+		except ValueError:
+			jdata = self.resetConfig()
 
 		return jdata
 
@@ -141,9 +143,15 @@ class MainWindowManager (metaclass = SingletonMetaclass): # Python 3 metaclasses
 		if rules == "":
 			if isinstance(self.__API, MaxAPICommunicator): rules = self.fileDir + "\\rules\\max\\"
 			elif isinstance(self.__API, MayaAPICommunicator): rules = self.fileDir + "\\rules\\maya\\"
+			os.makedirs(rules)
 
-		if preScripts == "": preScripts = self.fileDir + "\\scripts\\pre\\"
-		if postScripts == "": postScripts = self.fileDir + "\\scripts\\post\\"
+		if preScripts == "": 
+			preScripts = self.fileDir + "\\scripts\\pre\\"
+			os.makedirs(preScripts)
+
+		if postScripts == "": 
+			postScripts = self.fileDir + "\\scripts\\post\\"
+			os.makedirs(postScripts)
 
 		jsonData = {"Rules":rules, "PreScripts":preScripts, "PostScripts":postScripts, "Profile":profile}
 
