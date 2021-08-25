@@ -199,6 +199,10 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 			self.lab_ruleStatus.setText("UNSUPPORTED API!")
 			self.lab_ruleStatus.setStyleSheet("QLabel {background-color:magenta; color:black; font-weight: bold}")
 			self.setFixable (False)
+		elif status == (-2): # Rule can't be checked because it is disabled
+			self.lab_ruleStatus.setText("DISABLED")
+			self.lab_ruleStatus.setStyleSheet("QLabel {background-color:gray; color:black; font-weight: bold}")
+			self.setFixable (False)
 
 	# Sets the Rule Row as fixable (enables/disables the Fix button)
 	def setFixable (self, isFixable):
@@ -208,6 +212,9 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 	def toggle (self, toggle):
 		row = self.lab_ruleName.parentWidget()
 		row.setEnabled(toggle)
+
+		if toggle: self.setStatus(0)
+		else: self.setStatus(-2)
 
 	# Disables the up and down arrows for the Rule Row
 	def disableArrows (self, isTop, isBottom):
