@@ -213,8 +213,8 @@ class RuleRow (QWidget.QWidget): # QWidget for each Rule Row in the Main Window 
 		row = self.lab_ruleName.parentWidget()
 		row.setEnabled(toggle)
 
-		if toggle: self.setStatus(0)
-		else: self.setStatus(-2)
+		if toggle: self.setStatus(0, False)
+		else: self.setStatus(-2, False)
 
 	# Disables the up and down arrows for the Rule Row
 	def disableArrows (self, isTop, isBottom):
